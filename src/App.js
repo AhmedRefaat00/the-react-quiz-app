@@ -26,7 +26,7 @@ function reducer(state, action) {
       const point = action.payload === state.questions[state.index].correctOption ? state.questions[state.index].points : 0
       return { ...state, answer: action.payload, points: state.points + point }
     case 'nextQuestion':
-      return { ...state, index: state.index++, answer: null }
+      return { ...state, index: state.index + 1, answer: null }
     case 'finish':
       return { ...state, status: 'finished', highscore: state.points > state.highscore ? state.points : state.highscore }
     case 'restart':
