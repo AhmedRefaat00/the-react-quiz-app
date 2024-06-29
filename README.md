@@ -1,70 +1,115 @@
-# Getting Started with Create React App
+# README
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+This project is a quiz application built with React, utilizing the `useReducer` and `useEffect` hooks for state management and side effects. The application fetches questions from an API, allows users to answer them within a time limit, and keeps track of their score and high score.
 
-In the project directory, you can run:
+## Folder Structure
 
-### `npm start`
+```
+my-quiz-app/
+├── public/
+│   └── index.html
+├── src/
+│   ├── components/
+│   │   ├── Header.js
+│   │   ├── Main.js
+│   │   ├── Loader.js
+│   │   ├── Error.js
+│   │   ├── StartScreen.js
+│   │   ├── Question.js
+│   │   ├── NextBtn.js
+│   │   ├── Progress.js
+│   │   ├── FinishScreen.js
+│   │   └── Timer.js
+│   ├── App.css
+│   ├── App.js
+│   └── index.js
+├── .gitignore
+├── package.json
+└── README.md
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Components
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Header**: Displays the header of the application.
+- **Main**: Wraps the main content of the application.
+- **Loader**: Displays a loading spinner when data is being fetched.
+- **Error**: Displays an error message if data fetching fails.
+- **StartScreen**: Displays the start screen with the number of questions and a start button.
+- **Question**: Displays the current question and options for the user to answer.
+- **NextBtn**: Displays the next button to proceed to the next question.
+- **Progress**: Displays the progress of the quiz including the current question index, total questions, maximum possible points, and current points.
+- **FinishScreen**: Displays the final score, high score, and a restart button.
+- **Timer**: Displays a countdown timer for each question.
 
-### `npm test`
+## State Management
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The application uses the `useReducer` hook to manage the state. The initial state and the reducer function are defined as follows:
 
-### `npm run build`
+### Initial State
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```javascript
+const initialState = { 
+  questions: [], 
+  status: 'loading', 
+  index: 0, 
+  answer: null, 
+  points: 0, 
+  highscore: 0, 
+  tick: null 
+};
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Reducer Function
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The reducer function handles the following action types:
 
-### `npm run eject`
+- `dataReceived`: Sets the questions and updates the status to 'ready'.
+- `dataFailed`: Sets the status to 'error' if data fetching fails.
+- `start`: Starts the quiz and sets the timer.
+- `newAnswer`: Updates the state with the new answer and points.
+- `nextQuestion`: Moves to the next question.
+- `finish`: Ends the quiz and updates the high score.
+- `restart`: Restarts the quiz.
+- `decTimer`: Decrements the timer and checks if the time is up.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Fetching Data
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The `useEffect` hook is used to fetch the questions from an API when the component mounts.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```javascript
+useEffect(() => {
+  fetch('http://localhost:3001/questions')
+    .then((res) => res.json())
+    .then((data) => dispatch({ type: 'dataReceived', payload: data }))
+    .catch((err) => dispatch({ type: 'dataFailed' }));
+}, []);
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Running the Application
 
-## Learn More
+To run the application locally, follow these steps:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/AhmedRefaat00/my-quiz-app.git
+   ```
+2. Navigate to the project directory:
+   ```sh
+   cd my-quiz-app
+   ```
+3. Install the dependencies:
+   ```sh
+   npm install
+   ```
+4. Start the application:
+   ```sh
+   npm start
+   ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The application will be available at `http://localhost:3000`.
 
-### Code Splitting
+## Conclusion
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This quiz application demonstrates how to build a React application with multiple components, manage state with `useReducer`, handle side effects with `useEffect`, and fetch data from an API. Enjoy building and extending this project!
